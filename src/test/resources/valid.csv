@@ -1,0 +1,3 @@
+Email,FirstName,LastName,FiscalCode,Description,LastAccessDate
+test1@test.com,John,Doe,AAAA1,This is John Doe,2021-01-01
+test2@test.com,Mary,Jane,AAAA2,This is Mary Jane,2021-01-02
