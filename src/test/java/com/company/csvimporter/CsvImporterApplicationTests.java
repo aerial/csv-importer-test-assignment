@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -46,13 +48,16 @@ class CsvImporterApplicationTests {
 	}
 
 	@Test
-	void givenUserAlreadyInDB_whenNewDataIsImportedWithSameEmail_thenUserDataIsOverwritten() {
-		//load one more file with updated data
-		CsvImporterApplication.main(new String[]{CsvImporterTestFixtures.OVERWRITE_JOHN});
-		//check if data for first user was updated
+	void givenUserAlreadyInDB_whenNewDataIsImportedWithSameEmail_thenUserDataIsOverwritten() throws IOException {
 		User john = userRepository.findByEmail(CsvImporterTestFixtures.USER_1_EMAIL).get();
-		assertEquals(CsvImporterTestFixtures.USER_1_OVERWRITTEN_FISCAL_CODE, john.getFiscalCode());
-		assertEquals(CsvImporterTestFixtures.USER_1_OVERWRITTEN_DESCRIPTION, john.getDescription());
+		assertEquals(CsvImporterTestFixtures.USER_1_FISCAL_CODE, john.getFiscalCode());
+		assertEquals(CsvImporterTestFixtures.USER_1_DESCRIPTION, john.getDescription());
+		//load one more file with updated data
+		fileProcessor.process(CsvImporterTestFixtures.OVERWRITE_JOHN);
+		//check if data for first user was updated
+		User johnUpdated = userRepository.findByEmail(CsvImporterTestFixtures.USER_1_EMAIL).get();
+		assertEquals(CsvImporterTestFixtures.USER_1_OVERWRITTEN_FISCAL_CODE, johnUpdated.getFiscalCode());
+		assertEquals(CsvImporterTestFixtures.USER_1_OVERWRITTEN_DESCRIPTION, johnUpdated.getDescription());
 	}
 
 	@Test
